@@ -5,12 +5,21 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { Link, Route, Switch } from 'react-router-dom';
+import { Link, Route, Switch, withRouter } from 'react-router-dom';
 import HomePage from './HomePage';
 import BookPage from './BookPage';
 import LocalPage from './LocalPage';
+import LoginPage from './LoginPage';
+import JoinPage  from './JoinPage';
+import MyPage from './MyPage';
 
-const RouterPage = () => {
+
+
+const RouterPage = ({history}) => { // 히스토리 쓸려면 위드라우터로 묶어야함
+    const onLogout = () => {
+        sessionStorage.removeItem('email');
+        history.push('/');
+    }
     return (
         <>
             <Navbar bg="light" expand="lg">
@@ -26,6 +35,17 @@ const RouterPage = () => {
                             <Link to="/book">도서검색</Link>
                             <Link to="/local">지역검색</Link>
                         </Nav>
+                        <div> 
+                            {sessionStorage.getItem('email') ?
+                                <>
+                                <Link to="/mypage">{sessionStorage.getItem('email')}</Link>
+                                <Link  onClick={onLogout} to="/logout">로그아웃</Link>  
+                                </>
+                                :
+                                <Link to="/login">로그인</Link>
+                            }
+                            
+                        </div>
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
@@ -33,9 +53,14 @@ const RouterPage = () => {
                 <Route path="/" component={HomePage} exact={true}/>
                 <Route path="/book" component={BookPage}/> 
                 <Route path="/local" component={LocalPage}/>
+                <Route path="/login" component={LoginPage}/>
+                <Route path="/Join" component={JoinPage}/>
+                <Route path="/mypage" component={MyPage}/>
+                
+                
             </Switch>
         </>
     )
 }
 
-export default RouterPage
+export default withRouter(RouterPage)
