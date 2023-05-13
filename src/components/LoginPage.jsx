@@ -8,7 +8,7 @@ const LoginPage = ({history}) => {
     const auth = getAuth(app);
     const [ form, setForm ] = useState({
         email: 'phy@inha.com',
-        password: '12345678'
+        password: '12341234'
     });
     const { email, password } = form;
     const onChange =(e)=> {
@@ -22,11 +22,12 @@ const LoginPage = ({history}) => {
         signInWithEmailAndPassword(auth, email, password)
         .then(success=>{
             sessionStorage.setItem('email', email);
+            sessionStorage.setItem('uid',success.user.uid);
             setLoading(false);
-            history.push('/')
+            history.push('/') //로그인 되면 루트 페이지로 이동 (히스토리 객체 이용)
         })
         .catch(error=>{
-            alert('에러:' + error.message);
+            alert('로그인 실패 :' + error.message);
             setLoading(false);
         });
     }

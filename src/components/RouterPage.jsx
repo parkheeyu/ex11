@@ -39,7 +39,9 @@ const RouterPage = ({history}) => { // 히스토리 쓸려면 위드라우터로
                             {sessionStorage.getItem('email') ?
                                 <>
                                 <Link to="/mypage">{sessionStorage.getItem('email')}</Link>
-                                <Link  onClick={onLogout} to="/logout">로그아웃</Link>  
+                                <Link  
+                                    onClick={onLogout} 
+                                    to="/logout">로그아웃</Link>  
                                 </>
                                 :
                                 <Link to="/login">로그인</Link>

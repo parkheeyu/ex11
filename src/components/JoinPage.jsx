@@ -2,15 +2,19 @@ import React, { useState } from 'react'
 import { Col, Row, Card, Button, Form, InputGroup} from 'react-bootstrap'
 import {app} from '../firebaseInit'
 import {getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { Link } from 'react-router-dom'
+import { getFirestore,doc,setDoc } from 'firebase/firestore'
 
 const JoinPage = ({history}) => {
+    const [loading, setLoading] = useState(false);
     const auth = getAuth(app);
+    const db = getFirestore(app);
     const [form, setForm] = useState({
-        email:'red@inha.com',
+        email:'test2@inha.com',
         password: '12341234'
     });
-    const [loading, setLoading] = useState(false);
-    const {email, password} = form;
+
+    const {email, password} = form; //할당할때 중괄호 
     const onChange = (e) => {
         setForm({
             ...form,
@@ -19,21 +23,33 @@ const JoinPage = ({history}) => {
     }
 
     const onClickJoin = () => {
-        if(email === '' || password === '') {
+        if (!window.confirm('회원으로 등록 하시겠습니까?')) return;
+        if (email === '' || password === '') {
             alert('아이디 또는 비밀번호를 입력하세요.');
-        }else{
+        } else {
             setLoading(true);
             createUserWithEmailAndPassword(auth, email, password)
-            .then(success=>{
-                setLoading(false);
-                history.push('/login');
-            })
-            .catch(error=>{
-                setLoading(false);
-                alert('회원가입실패:' + error.message);
-            });
+                .then(async success => {
+                    console.log('success....', success);
+                    const uid = success.user.uid;
+                    await setDoc(doc(db, 'user' ,uid), {
+                        email: email,
+                        name: '홍길동',
+                        address: '인천 부평구 삼산동',
+                        phone: '010-6768-1111',
+                        photo: ''
+                    });
+
+                    setLoading(false);
+                    history.push('/login'); //회원가입 후 로그인창으로 이동
+                })
+                .catch(error=>{
+                    setLoading(false);
+                    alert('로그인 실패:' + error.message);
+                });
+            }
+
         }
-    }
 
     if(loading) return <h1 className='my-5 text-center'>로딩중......</h1>
     return (
