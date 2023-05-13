@@ -5,7 +5,6 @@ import {app} from '../firebaseInit'
 import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore'
 import { getStorage, uploadBytes, ref, getDownloadURL } from 'firebase/storage'
 
-
 const MyPage = ({ history }) => {
     const uid =sessionStorage.getItem("uid");
     const [loading, setLoading] = useState(false);
@@ -38,11 +37,24 @@ const MyPage = ({ history }) => {
         const user=await getDoc(doc(db,'user',uid));
         console.log(user.data());
         setForm(user.data());
+        setImage(user.data().photo ? user.data().photo: // 저장된 포토를 보여주고 없으면 기본 이미지
+        'https://via.placeholder.com/200x200')
         setLoading(false);
     }
-    const onUpdate =() =>{
+    const onUpdate =async() =>{
         if(!window.confirm('수정된 내용을 저장하실래요?')) return;
-        setDoc(doc(db,'user',uid),form)
+        setLoading(true);
+        if(file){
+            const snapshot = await uploadBytes(
+                ref(storage,`/photo/${Date.now()}.jpg`),file);
+            const url =await getDownloadURL(snapshot.ref);
+            await setDoc(doc(db,'user',uid),{...form, photo:url});
+        }else{
+            await setDoc(doc(db,'user',uid),form);
+        }
+
+        setLoading(false);
+        history.pusg('/')
     }
 
     useEffect(()=>{
