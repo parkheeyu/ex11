@@ -1,6 +1,6 @@
 import './App.css';
 import RouterPage from './components/RouterPage';
-import any from './images/any.jpg'
+import any from './images/any.png'
 import {Container} from 'react-bootstrap'
 
 function App() {

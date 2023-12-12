@@ -33,3 +33,7 @@
   font-family: 'GmarketSansMedium';
   font-size: 0.8rem;
 }
+
+.rounded-image {
+  border-radius: 15%;
+}

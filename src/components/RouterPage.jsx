@@ -12,6 +12,7 @@ import LocalPage from './LocalPage';
 import LoginPage from './LoginPage';
 import JoinPage  from './JoinPage';
 import MyPage from './MyPage';
+import logo from './logo1.jpg';
 
 
 
@@ -24,7 +25,13 @@ const RouterPage = ({history}) => { // 히스토리 쓸려면 위드라우터로
         <>
             <Navbar bg="light" expand="lg">
                 <Container fluid>
-                    <Navbar.Brand href="/books">LOGO</Navbar.Brand>
+                    <Navbar.Brand href="/"><img
+              src={logo}
+              alt="로고"
+              width="100%"
+              height="60"
+              className="d-inline-block align-top  rounded-image" 
+            /></Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbarScroll" />
                     <Navbar.Collapse id="navbarScroll">
                         <Nav
